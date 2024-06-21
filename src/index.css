@@ -34,17 +34,18 @@ body.dark-mode {
 .theme-toggle button:focus {
   outline: none;
 }
+
 body {
   margin: 0;
-  font-family: -"Inter", sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    background-color: var(--theme);
-    color: var(--white);
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--theme);
+  color: var(--white);
 }
 
 input {
-  font-size: "Inter", sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 a {
@@ -52,13 +53,15 @@ a {
 }
 
 .input-wrapper {
-  width: 70vw;
+  width: 90vw;
+  max-width: 1200px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
   margin-top: 4rem;
+  padding: 0 1rem;
 }
 
 .input-wrapper h1 {
@@ -68,11 +71,10 @@ a {
 }
 
 .podcasts-layout {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  width: 100%;
 }
 
 .banner-wrapper img {
