@@ -16,6 +16,55 @@ import { useDispatch } from 'react-redux';
 import PrivateRoutes from './components/Utils/PrivateRoutes';
 
 export default function App() {
+  const dispatch = useDispatch();
+  const [darkMode, setDarkMode] = useState(getInitialMode());
+
+  // Function to get initial mode from local storage or browser preference
+  function getInitialMode() {
+    const savedMode = JSON.parse(localStorage.getItem('darkMode'));
+    return savedMode ?? false; // Default to false (light mode) if no saved mode found
+  }
+
+  // Function to toggle dark mode
+  const toggleTheme = () => {
+    const newMode = !darkMode;
+    setDarkMode(newMode);
+    localStorage.setItem('darkMode', JSON.stringify(newMode));
+  };
+
+  useEffect(() => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const unsubscribeSnapshot = onSnapshot(
+          doc(db, 'users', user.uid),
+          (userDoc) => {
+            if (userDoc.exists()) {
+              const userData = userDoc.data();
+              dispatch(
+                setUser({
+                  name: userData.name,
+                  email: userData.email,
+                  uid: user.uid,
+                })
+              );
+            }
+          },
+          (error) => {
+            console.error('Error fetching user data:', error);
+          }
+        );
+
+        return () => {
+          unsubscribeSnapshot();
+        };
+      }
+    });
+
+    return () => {
+      unsubscribeAuth();
+    };
+  }, [dispatch]);
+
   return (
     <div className={`App ${darkMode ? 'dark-mode' : 'light-mode'}`}>
       <ToastContainer />
