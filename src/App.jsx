@@ -1,10 +1,19 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import "./App.css";
-import LoginPage from "./pages/LoginPage";
-import Profile from "./pages/Profile";
-import UploadPodcast from "./pages/UploadPodcast"
-import PodcastsPage from "./pages/Podcasts";
-import PodcastDetailsPage from "./pages/PodcastDetails";
+// eslint-disable-next-line no-unused-vars
+import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import SignUpPage from './pages/SignUpPage';
+import Profile from './pages/Profile';
+import PodcastsPage from './pages/Podcasts';
+import PodcastDetailsPage from './pages/PodcastDetails';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { useEffect } from 'react';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth, db } from './firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
+import { setUser } from './slices/userSlice';
+import { useDispatch } from 'react-redux';
+import PrivateRoutes from './components/Utils/PrivateRoutes';
 
 export default function App() {
   return (
