@@ -76,3 +76,15 @@ a {
   border-radius: 8px;
   text-align: left;
 }
+
+.emphasized-text {
+  cursor: pointer;
+  color: #18b2de; /* Blue color for emphasis */
+  text-decoration: underline;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.emphasized-text:hover {
+  color: #0f78a4; /* Darker blue on hover */
+}
