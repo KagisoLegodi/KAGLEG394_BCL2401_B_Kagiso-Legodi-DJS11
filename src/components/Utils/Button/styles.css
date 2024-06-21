@@ -1,0 +1,15 @@
+.custom-btn {
+        background-color: #ff8c38;
+        border: bold;
+        border-radius: 10px;
+        margin-top: 1px;
+        color: white;
+        font-family: "Inter", sans-serif;
+        cursor: pointer;
+}
+
+.custom-btn:hover {
+    background-color: var(--white);
+    color: var(--theme);
+    transition: all 0.2s;
+}
