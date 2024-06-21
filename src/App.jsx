@@ -8,14 +8,21 @@ import PodcastDetailsPage from "./pages/PodcastDetails";
 
 export default function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/upload" element={<UploadPodcast />} />
-        <Route path="/podcasts" element={<PodcastsPage />} />
-        <Route path="/podcasts/:id" element={<PodcastDetailsPage />} />
-      </Routes>
-    </Router>
+    <div className={`App ${darkMode ? 'dark-mode' : 'light-mode'}`}>
+      <ToastContainer />
+      <Router>
+        <div className="theme-toggle">
+          <button onClick={toggleTheme}>Toggle Theme</button>
+        </div>
+        <Routes>
+          <Route path="/" element={<SignUpPage />} />
+          <Route element={<PrivateRoutes />}>
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/podcasts" element={<PodcastsPage />} />
+            <Route path="/podcast/:id" element={<PodcastDetailsPage />} />
+          </Route>
+        </Routes>
+      </Router>
+    </div>
   );
 }
