@@ -8,6 +8,33 @@
   --purple-grey: #8f8297;
 }
 
+body.dark-mode {
+  background-color: var(--theme-dark);
+  color: var(--theme-light);
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+}
+
+.theme-toggle button {
+  background-color: var(--blue);
+  color: var(--white);
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.theme-toggle button:hover {
+  background-color: #147aad;
+}
+
+.theme-toggle button:focus {
+  outline: none;
+}
 body {
   margin: 0;
   font-family: -"Inter", sans-serif;
