@@ -1,38 +1,24 @@
-import { useState } from "react";
-import PropTypes from "prop-types";
-import "./styles.css";
+// eslint-disable-next-line no-unused-vars
+import React from 'react';
+import PropTypes from 'prop-types';
 
-export default function FileInput({ accept, id, fileHandleFnc, text }) {
-  const [fileSelected, setFileSelected] = useState("");
- 
-  const onChange = (e) => {
-    console.log(e.target.files);
-    setFileSelected(e.target.files[0].name);
-    fileHandleFnc(e.target.files[0]);
-  };
-
+function InputComponent({ state, setState, placeholder, type }) {
   return (
-    <>
-      <label
-        htmlFor={id}
-        className={`custom-input ${!fileSelected ? "label-input" : "active"}`}
-      >
-        {fileSelected ? `The File ${fileSelected} was Selected` : text}
-      </label>
-      <input
-        type="file"
-        accept={accept}
-        id={id}
-        style={{ display: "none" }}
-        onChange={onChange}
-      />
-    </>
+    <input
+      type={type}
+      value={state}
+      onChange={(e) => setState(e.target.value)}
+      placeholder={placeholder}
+      style={{ padding: '0.5rem', fontSize: '1rem' }}
+    />
   );
 }
 
-FileInput.propTypes = {
-  accept: PropTypes.string,      // accept should be a string
-  id: PropTypes.string,          // id should be a string
-  fileHandleFnc: PropTypes.func, // fileHandleFnc should be a function
-  text: PropTypes.string         // text should be a string
+InputComponent.propTypes = {
+  state: PropTypes.string.isRequired,
+  setState: PropTypes.func.isRequired,
+  placeholder: PropTypes.string,
+  type: PropTypes.string,
 };
+
+export default InputComponent;
