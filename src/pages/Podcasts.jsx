@@ -20,6 +20,7 @@ export default function PodcastsPage() {
   const [podcasts, setPodcasts] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("");
+  const [sortBy, setSortBy] = useState(""); // State to track sorting order
 
   useEffect(() => {
     const fetchPodcasts = async () => {
@@ -32,9 +33,9 @@ export default function PodcastsPage() {
           title: item.title,
           displayImage: item.image,
           genre: genreMap[item.genres], // Map genre ID to title
-          genreId: item.genre, // keep genre ID for filtering
+          genreId: item.genres, // keep genre ID for filtering
         }));
-        // Sort podcasts alphabetically by title
+        // Sort podcasts alphabetically by title initially
         podcastsData.sort((a, b) => a.title.localeCompare(b.title));
         setPodcasts(podcastsData);
       } catch (error) {
@@ -45,7 +46,16 @@ export default function PodcastsPage() {
     fetchPodcasts();
   }, []);
 
-  console.log(podcasts);
+  // Handle sorting based on title
+  useEffect(() => {
+    if (sortBy === "A-Z") {
+      // Sort alphabetically A-Z
+      setPodcasts([...podcasts].sort((a, b) => a.title.localeCompare(b.title)));
+    } else if (sortBy === "Z-A") {
+      // Sort alphabetically Z-A
+      setPodcasts([...podcasts].sort((a, b) => b.title.localeCompare(a.title)));
+    }
+  }, [podcasts, sortBy]);
 
   let filteredPodcasts = podcasts.filter(
     (item) =>
@@ -78,6 +88,12 @@ export default function PodcastsPage() {
               </option>
             ))}
           </select>
+        </div>
+
+        {/* Sort buttons */}
+        <div style={{ marginTop: "1rem" }}>
+          <button onClick={() => setSortBy("A-Z")}>Sort A-Z</button>
+          <button onClick={() => setSortBy("Z-A")}>Sort Z-A</button>
         </div>
 
         {filteredPodcasts.length > 0 ? (
