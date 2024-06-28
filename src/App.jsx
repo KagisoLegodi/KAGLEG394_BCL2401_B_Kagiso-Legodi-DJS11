@@ -1,5 +1,3 @@
-// App.js
-
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -7,7 +5,7 @@ import SignUpPage from './pages/SignUpPage';
 import Profile from './pages/Profile';
 import PodcastsPage from './pages/Podcasts';
 import PodcastDetailsPage from './pages/PodcastDetails';
-import FavouritesPage from './pages/Favourites'; // Import your FavoritesPage component
+import FavouritesPage from './pages/Favourites.jsx'; // Import your FavoritesPage component
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect } from 'react';
