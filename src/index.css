@@ -116,29 +116,3 @@ a {
 .emphasized-text:hover {
   color: #0f78a4; /* Darker blue on hover */
 }
-
-/* Responsive Design */
-
-@media (min-width: 768px) {
-  .input-wrapper {
-    width: 70vw;
-  }
-
-  .input-wrapper h1 {
-    font-size: 2rem;
-  }
-
-  .podcasts-layout {
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  }
-}
-
-@media (min-width: 1024px) {
-  .input-wrapper h1 {
-    font-size: 2.5rem;
-  }
-
-  .podcasts-layout {
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  }
-}
