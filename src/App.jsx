@@ -1,3 +1,5 @@
+// App.js
+
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -5,6 +7,7 @@ import SignUpPage from './pages/SignUpPage';
 import Profile from './pages/Profile';
 import PodcastsPage from './pages/Podcasts';
 import PodcastDetailsPage from './pages/PodcastDetails';
+import FavouritesPage from './pages/Favourites'; // Import your FavoritesPage component
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect } from 'react';
@@ -15,7 +18,7 @@ import { setUser } from './slices/userSlice';
 import { useDispatch } from 'react-redux';
 import PrivateRoutes from './components/Utils/PrivateRoutes';
 
-export default function App() {
+const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -61,9 +64,12 @@ export default function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/podcasts" element={<PodcastsPage />} />
             <Route path="/podcast/:id" element={<PodcastDetailsPage />} />
+            <Route path="/favourites" element={<FavouritesPage />} /> {/* Route for FavoritesPage */}
           </Route>
         </Routes>
       </Router>
     </div>
   );
-}
+};
+
+export default App;
