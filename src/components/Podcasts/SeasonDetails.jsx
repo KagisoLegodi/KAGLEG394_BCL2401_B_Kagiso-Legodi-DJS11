@@ -11,7 +11,7 @@ export default function SeasonDetails({ season }) {
             index={episodeIndex + 1}
             title={episode.title}
             description={episode.description}
-            audioFile="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+            audioFile={episode.audioFile || "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"}
           />
         ))
       ) : (
