@@ -28,12 +28,11 @@ export default function PodcastsPage() {
         const response = await fetch("https://podcast-api.netlify.app");
         const data = await response.json();
         const podcastsData = data.map((item) => ({
-          key: item.id,
           id: item.id,
           title: item.title,
           displayImage: item.image,
-          genre: genreMap[item.genres], // Map genre ID to title
-          genreId: item.genres, // keep genre ID for filtering
+          genres: item.genres.map(genreId => genreMap[genreId]), // Map genre IDs to titles
+          lastUpdated: item.last_updated, // Assuming this is how last updated is received
         }));
         // Sort podcasts alphabetically by title initially
         podcastsData.sort((a, b) => a.title.localeCompare(b.title));
@@ -44,7 +43,7 @@ export default function PodcastsPage() {
     };
 
     fetchPodcasts();
-  }, []);
+  }, []); // Dependency array ensures useEffect runs once
 
   // Handle sorting based on title
   useEffect(() => {
@@ -55,12 +54,13 @@ export default function PodcastsPage() {
       // Sort alphabetically Z-A
       setPodcasts([...podcasts].sort((a, b) => b.title.localeCompare(a.title)));
     }
-  }, [podcasts, sortBy]);
+  }, [sortBy, podcasts]); // Include podcasts in the dependency array
 
+  // Filter podcasts based on search and selected genre
   let filteredPodcasts = podcasts.filter(
     (item) =>
       item.title.trim().toLowerCase().includes(search.trim().toLowerCase()) &&
-      (selectedGenre ? item.genre === selectedGenre : true)
+      (selectedGenre ? item.genres.includes(selectedGenre) : true)
   );
 
   return (
@@ -98,16 +98,12 @@ export default function PodcastsPage() {
 
         {filteredPodcasts.length > 0 ? (
           <div className="podcasts-layout" style={{ margin: "1.0rem" }}>
-            {filteredPodcasts.map((item) => {
-              return (
-                <PodcastCard
-                  key={item.id}
-                  id={item.id}
-                  title={item.title}
-                  displayImage={item.displayImage}
-                />
-              );
-            })}
+            {filteredPodcasts.map((item) => (
+              <PodcastCard
+                key={item.id}
+                item={item}
+              />
+            ))}
           </div>
         ) : (
           <p>{search ? "Podcast Not Found" : "No Podcasts On The Platform"}</p>
