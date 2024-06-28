@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+/* eslint-disable no-unused-vars */
+import React, { useEffect, useState } from "react";
 import Header from "../components/Utils/Header/index";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -81,13 +82,20 @@ export default function PodcastDetailsPage() {
                     Season {seasonIndex + 1}
                   </h2>
                   {selectedSeasonIndex === seasonIndex && (
-                    <SeasonDetails season={season} />
+                    <div className="season-details">
+                      <img src={season.image} alt={`Season ${seasonIndex + 1}`} className="season-image" />
+                      <SeasonDetails season={season} />
+                    </div>
                   )}
                 </div>
               ))
             ) : (
               <p>No Seasons</p>
             )}
+            {/* Back to Podcast Button */}
+            <div style={{ marginTop: "1rem" }}>
+              <Button text="Back to Podcasts" to="/podcasts" />
+            </div>
           </>
         )}
       </div>
