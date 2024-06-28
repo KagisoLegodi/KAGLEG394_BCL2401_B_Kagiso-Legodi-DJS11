@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignUpPage from './pages/SignUpPage';
 import Profile from './pages/Profile';
@@ -17,20 +17,6 @@ import PrivateRoutes from './components/Utils/PrivateRoutes';
 
 export default function App() {
   const dispatch = useDispatch();
-  const [darkMode, setDarkMode] = useState(getInitialMode());
-
-  // Function to get initial mode from local storage or browser preference
-  function getInitialMode() {
-    const savedMode = JSON.parse(localStorage.getItem('darkMode'));
-    return savedMode ?? false; // Default to false (light mode) if no saved mode found
-  }
-
-  // Function to toggle dark mode
-  const toggleTheme = () => {
-    const newMode = !darkMode;
-    setDarkMode(newMode);
-    localStorage.setItem('darkMode', JSON.stringify(newMode));
-  };
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
@@ -66,12 +52,9 @@ export default function App() {
   }, [dispatch]);
 
   return (
-    <div className={`App ${darkMode ? 'dark-mode' : 'light-mode'}`}>
+    <div className="App">
       <ToastContainer />
       <Router>
-        <div className="theme-toggle">
-          <button onClick={toggleTheme}>Toggle Theme</button>
-        </div>
         <Routes>
           <Route path="/" element={<SignUpPage />} />
           <Route element={<PrivateRoutes />}>
