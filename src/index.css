@@ -116,3 +116,30 @@ a {
 .emphasized-text:hover {
   color: #0f78a4; /* Darker blue on hover */
 }
+
+/* Example styles for FavoritesPage */
+.favorites-page {
+  padding: 20px;
+}
+
+.favorites-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.favorite-item {
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.favorite-item h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.favorite-item p {
+  font-size: 1rem;
+  color: #666;
+}
