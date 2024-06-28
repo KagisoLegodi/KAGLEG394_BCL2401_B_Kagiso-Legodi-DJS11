@@ -23,7 +23,7 @@ export default function PodcastDetailsPage() {
           if (data) {
             console.log("Fetched Podcast Data:", data);
             setPodcast(data);
-            setSeasons(data.seasons);
+            setSeasons(data.seasons); // Assuming data.seasons is an array of season objects
           } else {
             console.log("No such Podcast!");
             toast.error("No such Podcast!");
@@ -73,7 +73,7 @@ export default function PodcastDetailsPage() {
               <img src={podcast.image} alt={podcast.title} className="image-wrapper" />
             </div>
             <p className="podcast-description">{podcast.description}</p>
-            <h1 className="podcast-title-heading">Seasons</h1>
+            <h1 className="podcast-title-heading">Seasons ({seasons.length})</h1>
             {seasons.length > 0 ? (
               seasons.map((season, seasonIndex) => (
                 <div key={seasonIndex}>
