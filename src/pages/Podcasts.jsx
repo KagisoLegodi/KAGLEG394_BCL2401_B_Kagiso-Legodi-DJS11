@@ -21,10 +21,12 @@ export default function PodcastsPage() {
   const [search, setSearch] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("");
   const [sortBy, setSortBy] = useState(""); // State to track sorting order
+  const [isLoading, setIsLoading] = useState(true); // Loading state
 
   useEffect(() => {
     const fetchPodcasts = async () => {
       try {
+        setIsLoading(true); // Set loading state to true on fetch start
         const response = await fetch("https://podcast-api.netlify.app");
         const data = await response.json();
         const podcastsData = data.map((item) => ({
@@ -37,8 +39,10 @@ export default function PodcastsPage() {
         // Sort podcasts alphabetically by title initially
         podcastsData.sort((a, b) => a.title.localeCompare(b.title));
         setPodcasts(podcastsData);
+        setIsLoading(false); // Set loading state to false on fetch completion
       } catch (error) {
         console.error("Error fetching podcasts:", error);
+        setIsLoading(false); // Set loading state to false on fetch error
       }
     };
 
@@ -96,7 +100,9 @@ export default function PodcastsPage() {
           <button onClick={() => setSortBy("Z-A")}>Sort Z-A</button>
         </div>
 
-        {filteredPodcasts.length > 0 ? (
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : filteredPodcasts.length > 0 ? (
           <div className="podcasts-layout" style={{ margin: "1.0rem" }}>
             {filteredPodcasts.map((item) => (
               <PodcastCard
