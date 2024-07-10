@@ -4,17 +4,28 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import PodcastCard from '../components/Podcasts/PodcastCard';
+import Header from '../components/Utils/Header'; // Adjust the import path as necessary
 
 const HomePage = () => {
   const [shows, setShows] = useState([]);
 
   useEffect(() => {
-    // Fetch the shows data from your API
     const fetchShows = async () => {
       try {
         const response = await fetch('https://podcast-api.netlify.app'); // Replace with your actual API endpoint
         const data = await response.json();
-        setShows(data);
+
+        const podcastsData = data.map((item) => ({
+          id: item.id,
+          title: item.title,
+          displayImage: item.image,
+          genres: item.genres ? item.genres.map(String) : [], // Convert genres to strings and provide default
+          episodes: item.episodes ?? 0, // Default value if undefined
+          seasons: item.seasons ?? 0, // Default value if undefined
+          lastUpdated: item.last_updated ?? 'N/A', // Default value if undefined
+        }));
+
+        setShows(podcastsData);
       } catch (error) {
         console.error('Error fetching shows:', error);
       }
@@ -29,6 +40,9 @@ const HomePage = () => {
     speed: 500,
     slidesToShow: 3,
     slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    arrows: false, // Remove the slide buttons
     responsive: [
       {
         breakpoint: 1024,
@@ -49,11 +63,14 @@ const HomePage = () => {
 
   return (
     <div className="home-page">
+      <Header />
       <h1>Recommended Shows</h1>
       <Slider {...settings}>
         {shows.map((show) => (
           <div key={show.id}>
-            <PodcastCard item={show} />
+            <PodcastCard 
+              item={show}
+            />
           </div>
         ))}
       </Slider>
