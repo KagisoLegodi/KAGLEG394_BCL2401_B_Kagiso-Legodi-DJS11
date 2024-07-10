@@ -1,102 +1,118 @@
-/* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "../components/Utils/Header/index";
-import { useNavigate, useParams } from "react-router-dom";
-import { toast } from "react-toastify";
-import Button from "../components/Utils/Button/Button";
-import { auth } from "../firebase";
-import SeasonDetails from "../components/Podcasts/SeasonDetails";
+import PodcastCard from "../components/Podcasts/PodcastCard";
+import InputComponent from "../components/Utils/Input/FileInput";
 
-export default function PodcastDetailsPage() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const [podcast, setPodcast] = useState({});
-  const [seasons, setSeasons] = useState([]);
-  const [selectedSeasonIndex, setSelectedSeasonIndex] = useState(null);
+// Genre ID to Title mapping
+const genreMap = {
+  1: "Personal Growth",
+  2: "Investigative Journalism",
+  3: "History",
+  4: "Comedy",
+  5: "Entertainment",
+  6: "Business",
+  7: "Fiction",
+  8: "News",
+  9: "Kids and Family",
+};
+
+export default function PodcastsPage() {
+  const [podcasts, setPodcasts] = useState([]);
+  const [search, setSearch] = useState("");
+  const [selectedGenre, setSelectedGenre] = useState("");
+  const [sortBy, setSortBy] = useState(""); // State to track sorting order
+  const [isLoading, setIsLoading] = useState(true); // Loading state
 
   useEffect(() => {
-    if (id) {
-      const getData = async () => {
-        try {
-          const response = await fetch(`https://podcast-api.netlify.app/id/${id}`);
-          const data = await response.json();
+    const fetchPodcasts = async () => {
+      try {
+        setIsLoading(true); // Set loading state to true on fetch start
+        const response = await fetch("https://podcast-api.netlify.app");
+        const data = await response.json();
+        const podcastsData = data.map((item) => ({
+          id: item.id,
+          title: item.title,
+          displayImage: item.image,
+          genres: item.genres.map(genreId => genreMap[genreId]), // Map genre IDs to titles
+          lastUpdated: item.last_updated, // Assuming this is how last updated is received
+        }));
+        // Sort podcasts alphabetically by title initially
+        podcastsData.sort((a, b) => a.title.localeCompare(b.title));
+        setPodcasts(podcastsData);
+        setIsLoading(false); // Set loading state to false on fetch completion
+      } catch (error) {
+        console.error("Error fetching podcasts:", error);
+        setIsLoading(false); // Set loading state to false on fetch error
+      }
+    };
 
-          if (data) {
-            console.log("Fetched Podcast Data:", data);
-            setPodcast(data);
-            setSeasons(data.seasons); // Assuming data.seasons is an array of season objects
-          } else {
-            console.log("No such Podcast!");
-            toast.error("No such Podcast!");
-            navigate("/podcasts");
-          }
-        } catch (e) {
-          toast.error(e.message);
-        }
-      };
+    fetchPodcasts();
+  }, []); // Dependency array ensures useEffect runs once
 
-      getData();
+  // Handle sorting based on title
+  useEffect(() => {
+    if (sortBy === "A-Z") {
+      // Sort alphabetically A-Z
+      setPodcasts([...podcasts].sort((a, b) => a.title.localeCompare(b.title)));
+    } else if (sortBy === "Z-A") {
+      // Sort alphabetically Z-A
+      setPodcasts([...podcasts].sort((a, b) => b.title.localeCompare(a.title)));
     }
-  }, [id, navigate]);
+  }, [sortBy, podcasts]); // Include podcasts in the dependency array
 
-  const handleSeasonSelect = (index) => {
-    setSelectedSeasonIndex(index === selectedSeasonIndex ? null : index);
-  };
+  // Filter podcasts based on search and selected genre
+  let filteredPodcasts = podcasts.filter(
+    (item) =>
+      item.title.trim().toLowerCase().includes(search.trim().toLowerCase()) &&
+      (selectedGenre ? item.genres.includes(selectedGenre) : true)
+  );
 
   return (
     <div>
       <Header />
-      <div className="input-wrapper" style={{ marginTop: "0rem" }}>
-        {podcast.id && (
-          <>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                width: "100%",
-                margin: "1rem",
-              }}
-            >
-              <h1 className="podcast-title-heading">{podcast.title}</h1>
-              {podcast.createdBy === auth.currentUser?.uid && (
-                <Button
-                  width={"200px"}
-                  text={"Favourites"}
-                  onClick={() => {
-                    navigate(`/podcast/${id}/Favourites`);
-                  }}
-                />
-              )}
-            </div>
+      <div className="input-wrapper" style={{ marginTop: "2rem" }}>
+        <h1>Explore Shows</h1>
+        <InputComponent
+          state={search}
+          setState={setSearch}
+          placeholder="Search By Title"
+          type="text"
+        />
 
-            <div className="banner-wrapper">
-              <img src={podcast.image} alt={podcast.title} className="image-wrapper" />
-            </div>
-            <p className="podcast-description">{podcast.description}</p>
-            <h1 className="podcast-title-heading">Seasons ({seasons.length})</h1>
-            {seasons.length > 0 ? (
-              seasons.map((season, seasonIndex) => (
-                <div key={seasonIndex}>
-                  <h2 onClick={() => handleSeasonSelect(seasonIndex)}>
-                    Season {seasonIndex + 1}
-                  </h2>
-                  {selectedSeasonIndex === seasonIndex && (
-                    <div className="season-details">
-                      <img src={season.image} alt={`Season ${seasonIndex + 1}`} className="season-image" />
-                      <SeasonDetails season={season} />
-                    </div>
-                  )}
-                </div>
-              ))
-            ) : (
-              <p>No Seasons</p>
-            )}
-            {/* Back to Podcast Button */}
-            <div style={{ marginTop: "1rem" }}>
-              <Button text="Back to Podcasts" to="/podcasts" />
-            </div>
-          </>
+        <div style={{ marginTop: "1rem" }}>
+          <select
+            value={selectedGenre}
+            onChange={(e) => setSelectedGenre(e.target.value)}
+            style={{ padding: "0.5rem", fontSize: "1rem" }}
+          >
+            <option value="">All Categories</option>
+            {Object.entries(genreMap).map(([id, title]) => (
+              <option key={id} value={title}>
+                {title}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Sort buttons */}
+        <div style={{ marginTop: "1rem" }}>
+          <button onClick={() => setSortBy("A-Z")}>Sort A-Z</button>
+          <button onClick={() => setSortBy("Z-A")}>Sort Z-A</button>
+        </div>
+
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : filteredPodcasts.length > 0 ? (
+          <div className="podcasts-layout" style={{ margin: "1.0rem" }}>
+            {filteredPodcasts.map((item) => (
+              <PodcastCard
+                key={item.id}
+                item={item}
+              />
+            ))}
+          </div>
+        ) : (
+          <p>{search ? "Podcast Not Found" : "No Podcasts On The Platform"}</p>
         )}
       </div>
     </div>
