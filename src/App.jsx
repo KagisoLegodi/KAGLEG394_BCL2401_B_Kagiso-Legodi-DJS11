@@ -5,7 +5,8 @@ import SignUpPage from './pages/SignUpPage';
 import Profile from './pages/Profile';
 import PodcastsPage from './pages/Podcasts';
 import PodcastDetailsPage from './pages/PodcastDetails';
-import FavouritesPage from './pages/Favourites.jsx'; // Import your FavoritesPage component
+import FavouritesPage from './pages/Favourites.jsx';
+import HomePage from './pages/Home'; // Import HomePage component
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect } from 'react';
@@ -57,12 +58,13 @@ const App = () => {
       <ToastContainer />
       <Router>
         <Routes>
-          <Route path="/" element={<SignUpPage />} />
+          <Route path="/Home" element={<HomePage />} /> {/* Add HomePage route */}
+          <Route path="/signup" element={<SignUpPage />} />
           <Route element={<PrivateRoutes />}>
             <Route path="/profile" element={<Profile />} />
             <Route path="/podcasts" element={<PodcastsPage />} />
             <Route path="/podcast/:id" element={<PodcastDetailsPage />} />
-            <Route path="/favourites" element={<FavouritesPage />} /> {/* Route for FavoritesPage */}
+            <Route path="/favourites" element={<FavouritesPage />} />
           </Route>
         </Routes>
       </Router>
