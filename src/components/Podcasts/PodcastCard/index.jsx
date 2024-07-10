@@ -7,7 +7,7 @@ const PodcastCard = ({ item }) => {
     return null;
   }
 
-  const { id, title, displayImage, genres } = item;
+  const { id, title, displayImage, genres, episodes, seasons, lastUpdated } = item;
 
   return (
     <Link to={`/podcast/${id}`}>
@@ -25,6 +25,11 @@ const PodcastCard = ({ item }) => {
             <span className="genre">No genres specified</span>
           )}
         </div>
+        <div className="additional-info">
+          <p>Episodes: {episodes}</p>
+          <p>Seasons: {seasons}</p>
+          <p>Last Updated: {lastUpdated}</p>
+        </div>
       </div>
     </Link>
   );
@@ -36,6 +41,9 @@ PodcastCard.propTypes = {
     title: PropTypes.string.isRequired,
     displayImage: PropTypes.string.isRequired,
     genres: PropTypes.arrayOf(PropTypes.string),
+    episodes: PropTypes.number.isRequired,
+    seasons: PropTypes.number.isRequired,
+    lastUpdated: PropTypes.string.isRequired,
   }),
 };
 
