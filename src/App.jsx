@@ -58,9 +58,9 @@ const App = () => {
       <ToastContainer />
       <Router>
         <Routes>
-          <Route path="/Home" element={<HomePage />} /> {/* Add HomePage route */}
           <Route path="/signup" element={<SignUpPage />} />
           <Route element={<PrivateRoutes />}>
+          <Route path="/home" element={<HomePage />} /> {/* Add HomePage route */}
             <Route path="/profile" element={<Profile />} />
             <Route path="/podcasts" element={<PodcastsPage />} />
             <Route path="/podcast/:id" element={<PodcastDetailsPage />} />
