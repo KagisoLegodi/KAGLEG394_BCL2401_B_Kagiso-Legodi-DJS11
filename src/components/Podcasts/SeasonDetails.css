@@ -1,0 +1,43 @@
+/* SeasonDetails.css */
+
+.season-details {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.episode-card {
+  background-color: blue;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  width: calc(33.333% - 32px); /* Three cards per row with some gap */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.episode-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.episode-card h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.episode-card p {
+  margin: 8px 0;
+  color: white;
+}
+
+.episode-card audio {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+/*.season-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}*/
