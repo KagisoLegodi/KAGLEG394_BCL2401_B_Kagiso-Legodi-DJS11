@@ -178,7 +178,6 @@ a {
   font-size: 0.9rem;
 }
 
-
 .episode-details img {
   width: 150px; /* Adjust the width as needed */
   height: auto;
@@ -213,4 +212,18 @@ a {
 .custom-audio-player::-webkit-media-controls-current-time-display,
 .custom-audio-player::-webkit-media-controls-time-remaining-display {
   color: var(--white);
+}
+
+/* HomePage styles */
+.home-page {
+  padding: 2rem;
+  text-align: center;
+}
+
+.slick-slide {
+  padding: 0 10px;
+}
+
+.slick-prev:before, .slick-next:before {
+  color: black;
 }
