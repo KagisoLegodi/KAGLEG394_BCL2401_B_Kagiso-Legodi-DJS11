@@ -7,19 +7,20 @@ export default function Header() {
   return (
     <div className="navbar">
       <div className="links">
-        <Link to="/" className={currentPath == "/" ? "active" : ""}>
+        
+        <Link to="/signup" className={currentPath === "/signup" ? "active" : ""}>
           Signup
         </Link>
-        <Link to="/podcasts" className={currentPath == "/podcasts" ? "active" : ""}>
+        <Link to="/home" className={currentPath === "/" ? "active" : ""}>
+          Home
+        </Link>
+        <Link to="/podcasts" className={currentPath === "/podcasts" ? "active" : ""}>
           Podcasts
         </Link>
-        <Link
-          to="/Favourites"
-          className={currentPath == "/Favourites" ? "active" : ""}
-        >
+        <Link to="/favourites" className={currentPath === "/favourites" ? "active" : ""}>
           Favourites
         </Link>
-        <Link to="/profile" className={currentPath == "/profile" ? "active" : ""}>
+        <Link to="/profile" className={currentPath === "/profile" ? "active" : ""}>
           Profile
         </Link>
       </div>
