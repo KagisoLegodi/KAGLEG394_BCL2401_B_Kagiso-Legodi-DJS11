@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import EpisodeDetails from '../components/Podcasts/EpisodeDetails'; // Import the EpisodeDetails component
 
-const FavoritesPage = ({ favorites }) => {
+const FavoritesPage = ({ favorites = [] }) => {
   const navigate = useNavigate();
 
   const handleBackToShows = () => {
