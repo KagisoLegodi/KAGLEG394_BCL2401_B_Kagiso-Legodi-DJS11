@@ -1,3 +1,4 @@
+
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -58,7 +59,7 @@ const App = () => {
       <ToastContainer />
       <Router>
         <Routes>
-          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/" element={<SignUpPage />} />
           <Route element={<PrivateRoutes />}>
           <Route path="/home" element={<HomePage />} /> {/* Add HomePage route */}
             <Route path="/profile" element={<Profile />} />

@@ -8,7 +8,7 @@ export default function Header() {
     <div className="navbar">
       <div className="links">
         
-        <Link to="/signup" className={currentPath === "/signup" ? "active" : ""}>
+        <Link to="/" className={currentPath === "/signup" ? "active" : ""}>
           Signup
         </Link>
         <Link to="/home" className={currentPath === "/" ? "active" : ""}>

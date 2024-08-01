@@ -1,59 +1,45 @@
 // eslint-disable-next-line no-unused-vars
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import EpisodeDetails from '../components/Podcasts/EpisodeDetails'; // Import the EpisodeDetails component
+import React, { useEffect, useState } from 'react';
 
-const FavoritesPage = ({ favorites = [] }) => {
-  const navigate = useNavigate();
+const FavoritesPage = () => {
+  const [favoriteEpisodes, setFavoriteEpisodes] = useState([]);
+  const [favoriteSeasons, setFavoriteSeasons] = useState([]);
+  const [favoriteGenres, setFavoriteGenres] = useState([]);
 
-  const handleBackToShows = () => {
-    navigate('/podcasts');
-  };
+  useEffect(() => {
+    const episodes = JSON.parse(localStorage.getItem("favoriteEpisodes")) || [];
+    const seasons = JSON.parse(localStorage.getItem("favoriteSeasons")) || [];
+    const genres = JSON.parse(localStorage.getItem("favoriteGenres")) || [];
 
-  const handleBackToSeasons = (showId) => {
-    navigate(`/podcast/${showId}`);
-  };
+    setFavoriteEpisodes(episodes);
+    setFavoriteSeasons(seasons);
+    setFavoriteGenres(genres);
+  }, []);
 
   return (
     <div className="favorites-page">
       <h1>Favorite Episodes</h1>
-      <button onClick={handleBackToShows}>Back to Shows</button>
-      <div className="favorites-list">
-        {favorites && favorites.length > 0 ? (
-          favorites.map((fav, index) => (
-            <div className="favorite-item" key={fav.episodeId}>
-              <EpisodeDetails
-                index={index + 1}
-                title={fav.episodeTitle}
-                description={fav.description}
-              />
-              <button onClick={() => handleBackToSeasons(fav.showId)}>Back to Seasons</button>
-            </div>
-          ))
-        ) : (
-          <p>No favorite episodes found.</p>
-        )}
-      </div>
+      <ul>
+        {favoriteEpisodes.map((episode, index) => (
+          <li key={index}>{episode.title}</li>
+        ))}
+      </ul>
+
+      <h1>Favorite Seasons</h1>
+      <ul>
+        {favoriteSeasons.map((season, index) => (
+          <li key={index}>{season.title}</li>
+        ))}
+      </ul>
+
+      <h1>Favorite Genres</h1>
+      <ul>
+        {favoriteGenres.map((genre, index) => (
+          <li key={index}>{genre}</li>
+        ))}
+      </ul>
     </div>
   );
-};
-
-FavoritesPage.propTypes = {
-  favorites: PropTypes.arrayOf(
-    PropTypes.shape({
-      episodeId: PropTypes.string.isRequired,
-      episodeTitle: PropTypes.string.isRequired,
-      showId: PropTypes.string.isRequired,
-      showTitle: PropTypes.string.isRequired,
-      seasonNumber: PropTypes.number.isRequired,
-      episodeNumber: PropTypes.number.isRequired,
-    })
-  ),
-};
-
-FavoritesPage.defaultProps = {
-  favorites: [],
 };
 
 export default FavoritesPage;

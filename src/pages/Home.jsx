@@ -8,6 +8,20 @@ import Header from '../components/Utils/Header'; // Adjust the import path as ne
 
 const HomePage = () => {
   const [shows, setShows] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const genreMap = {
+    1: "Personal Growth",
+    2: "Investigative Journalism",
+    3: "History",
+    4: "Comedy",
+    5: "Entertainment",
+    6: "Business",
+    7: "Fiction",
+    8: "News",
+    9: "Kids and Family",
+  };
 
   useEffect(() => {
     const fetchShows = async () => {
@@ -19,7 +33,7 @@ const HomePage = () => {
           id: item.id,
           title: item.title,
           displayImage: item.image,
-          genres: item.genres ? item.genres.map(String) : [], // Convert genres to strings and provide default
+          genres: item.genres.map(genreId => genreMap[genreId]), // Convert genres to strings and provide default
           episodes: item.episodes ?? 0, // Default value if undefined
           seasons: item.seasons ?? 0, // Default value if undefined
           lastUpdated: item.last_updated ?? 'N/A', // Default value if undefined
@@ -28,11 +42,13 @@ const HomePage = () => {
         setShows(podcastsData);
       } catch (error) {
         console.error('Error fetching shows:', error);
+      } finally {
+        setLoading(false); // Set loading to false after the fetch operation is complete
       }
     };
 
     fetchShows();
-  }, []);
+  }, [genreMap]);
 
   const settings = {
     dots: true,
@@ -65,15 +81,19 @@ const HomePage = () => {
     <div className="home-page">
       <Header />
       <h1>Recommended Shows</h1>
-      <Slider {...settings}>
-        {shows.map((show) => (
-          <div key={show.id}>
-            <PodcastCard 
-              item={show}
-            />
-          </div>
-        ))}
-      </Slider>
+      {loading ? (
+        <div>Loading...</div> // Replace with your loading indicator component or message
+      ) : (
+        <Slider {...settings}>
+          {shows.map((show) => (
+            <div key={show.id}>
+              <PodcastCard 
+                item={show}
+              />
+            </div>
+          ))}
+        </Slider>
+      )}
     </div>
   );
 };
