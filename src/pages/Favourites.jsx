@@ -24,20 +24,6 @@ const FavoritesPage = () => {
           <li key={index}>{episode.title}</li>
         ))}
       </ul>
-
-      <h1>Favorite Seasons</h1>
-      <ul>
-        {favoriteSeasons.map((season, index) => (
-          <li key={index}>{season.title}</li>
-        ))}
-      </ul>
-
-      <h1>Favorite Genres</h1>
-      <ul>
-        {favoriteGenres.map((genre, index) => (
-          <li key={index}>{genre}</li>
-        ))}
-      </ul>
     </div>
   );
 };
