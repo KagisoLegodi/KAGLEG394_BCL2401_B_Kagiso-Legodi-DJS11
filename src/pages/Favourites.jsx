@@ -36,9 +36,13 @@ const FavouritesPage = () => {
 
   useEffect(() => {
     const handleBeforeUnload = (e) => {
-      if (document.querySelector('audio[data-playing="true"]')) {
-        e.preventDefault();
-        e.returnValue = "";
+      const audios = document.querySelectorAll("audio");
+      for (let audio of audios) {
+        if (!audio.paused) {
+          e.preventDefault();
+          e.returnValue = "";
+          break;
+        }
       }
     };
 
@@ -50,10 +54,12 @@ const FavouritesPage = () => {
   }, []);
 
   const handleUnlikeEpisode = (episodeId) => {
+    console.log("Removing episode with ID:", episodeId);
     setLikedEpisodes((prevLikedEpisodes) => {
       const updatedLikedEpisodes = prevLikedEpisodes.filter(
         (ep) => ep.id !== episodeId
       );
+      console.log("Updated liked episodes:", updatedLikedEpisodes);
       localStorage.setItem(
         "likedEpisodes",
         JSON.stringify(updatedLikedEpisodes)
@@ -121,6 +127,11 @@ const FavouritesPage = () => {
     setSelectedGenre(genre);
   };
 
+  const allGenres = [
+    "All",
+    ...new Set(likedEpisodes.map((episode) => episode.genre).filter(Boolean)),
+  ];
+
   const filteredEpisodes =
     selectedGenre === "All"
       ? likedEpisodes
@@ -139,8 +150,8 @@ const FavouritesPage = () => {
 
   return (
     <main className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      <header className="flex justify-between items-center mb-6">
-        <div className="flex items-center">
+      <header className="flex flex-col md:flex-row justify-between items-center mb-6">
+        <div className="flex items-center mb-4 md:mb-0">
           <button
             onClick={() => navigate("/podcasts")}
             className="mr-4 px-4 py-2 rounded-full border bg-blue-600 text-white hover:bg-blue-700 transition-colors"
@@ -170,31 +181,35 @@ const FavouritesPage = () => {
         )}
       </header>
 
-      <div className="mb-4 flex space-x-2">
-        {Object.values(SORT_OPTIONS).map((option) => (
-          <button
-            key={option}
-            onClick={() => handleSortChange(option)}
-            className={`px-4 py-2 rounded-full border ${
-              sortOrder === option
-                ? "bg-blue-900 text-white"
-                : "bg-white text-blue-900"
-            }`}
+      <div className="mb-4 flex flex-col md:flex-row md:items-center md:justify-between">
+        <div className="flex space-x-2 mb-4 md:mb-0">
+          {Object.values(SORT_OPTIONS).map((option) => (
+            <button
+              key={option}
+              onClick={() => handleSortChange(option)}
+              className={`px-4 py-2 rounded-full border ${
+                sortOrder === option
+                  ? "bg-blue-900 text-white"
+                  : "bg-white text-blue-900"
+              } hover:bg-blue-700 hover:text-white transition-colors`}
+            >
+              {option}
+            </button>
+          ))}
+        </div>
+        <div>
+          <select
+            value={selectedGenre}
+            onChange={(e) => handleGenreChange(e.target.value)}
+            className="px-4 py-2 rounded-full border bg-white text-gray-900 hover:border-blue-700 transition-colors"
           >
-            {option}
-          </button>
-        ))}
-      </div>
-
-      <div className="mb-4">
-        <select
-          value={selectedGenre}
-          onChange={(e) => handleGenreChange(e.target.value)}
-          className="px-4 py-2 rounded-full border"
-        >
-          <option value="All">All Genres</option>
-          {/* Add other genre options here */}
-        </select>
+            {allGenres.map((genre) => (
+              <option key={genre} value={genre}>
+                {genre}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {isLoading ? (
@@ -212,22 +227,23 @@ const FavouritesPage = () => {
                 {groupedEpisodes[key].map((episode) => (
                   <li
                     key={episode.id}
-                    className="bg-white p-4 rounded-lg shadow-md flex justify-between items-center"
+                    className="bg-white p-4 rounded-lg shadow-md flex flex-col md:flex-row md:justify-between md:items-center hover:shadow-lg transition-shadow"
                   >
                     <div className="flex flex-col flex-grow mr-4">
                       <Link
                         to={`/podcast/${episode.podcastId}`}
-                        className="font-bold text-gray-900"
+                        className="font-bold text-blue-700 hover:underline mb-2 text-lg"
                       >
                         {episode.title}
                       </Link>
-                      <p className="text-gray-700 mb-2">
+                      <p className="text-gray-700 mb-2 line-clamp-3">
                         {episode.description}
                       </p>
-                      <p className="text-gray-600 mb-2">
-                        Season: {episode.season}, Episode: {episode.episode}
-                      </p>
-                      <p className="text-gray-500 text-sm">
+                      <div className="flex flex-wrap text-gray-600 mb-2">
+                        <span className="mr-4">Season: {episode.season}</span>
+                        <span>Episode: {episode.episode}</span>
+                      </div>
+                      <p className="text-gray-500 text-sm mb-2">
                         Added on: {new Date(episode.addedAt).toLocaleString()}
                       </p>
                       <audio
@@ -240,12 +256,10 @@ const FavouritesPage = () => {
                     </div>
                     <button
                       onClick={() => handleUnlikeEpisode(episode.id)}
-                      className="ml-4 p-2"
+                      className="mt-4 md:mt-0 md:ml-4 p-2 text-red-600 hover:text-red-800 transition-colors"
+                      title="Remove from Favourites"
                     >
-                      <AiFillHeart
-                        className="text-red-600 text-2xl"
-                        aria-label="Unlike Episode"
-                      />
+                      <AiFillHeart className="text-2xl" />
                     </button>
                   </li>
                 ))}
