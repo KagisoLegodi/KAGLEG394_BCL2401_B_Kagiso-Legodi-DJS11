@@ -78,12 +78,12 @@ export default function PodcastDetailsPage() {
             {seasons.length > 0 ? (
               seasons.map((season, seasonIndex) => (
                 <div key={seasonIndex}>
-                  <h2 onClick={() => handleSeasonSelect(seasonIndex)}>
+                  <h2 className="text"onClick={() => handleSeasonSelect(seasonIndex)}>
                     Season {seasonIndex + 1}
                   </h2>
                   {selectedSeasonIndex === seasonIndex && (
                     <div className="season-details">
-                      <img src={season.image} alt={`Season ${seasonIndex + 1}`} className="season-image" />
+                      {/* <img src={season.image} alt={`Season ${seasonIndex + 1}`} className="season-image" /> */}
                       <SeasonDetails season={season} />
                     </div>
                   )}

@@ -18,7 +18,7 @@ export default function SeasonDetails({ season, podcastId }) {
                 episode.audioFile ||
                 "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
               }
-              episodeImage={episode.image} // Pass episode image
+              // episodeImage={episode.image} // Pass episode image
               episodeId={episode.id} // Pass episode ID
               podcastId={podcastId} // Pass podcast ID
             />

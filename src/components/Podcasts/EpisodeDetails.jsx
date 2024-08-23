@@ -7,7 +7,6 @@ function EpisodeDetails({
   title,
   description,
   audioFile,
-  episodeImage, // Changed from seasonImage
   episodeId,
   podcastId,
 }) {
@@ -43,11 +42,7 @@ function EpisodeDetails({
 
   return (
     <div className="flex flex-col p-4 bg-gray-800 text-white rounded-lg shadow-lg">
-      <img
-        src={episodeImage}
-        alt={`Episode image for ${title}`}
-        className="w-full h-48 object-cover rounded-lg mb-4"
-      />
+      
       <h2 className="text-2xl font-semibold mb-2">
         Episode {index}: {title}
       </h2>
