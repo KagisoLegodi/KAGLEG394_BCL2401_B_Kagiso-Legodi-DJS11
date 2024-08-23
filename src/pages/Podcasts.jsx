@@ -1,4 +1,7 @@
-import { useEffect, useState } from "react";
+/* eslint-disable no-undef */
+// pages/PodcastsPage.js
+// eslint-disable-next-line no-unused-vars
+import React, { useEffect, useState } from "react";
 import Header from "../components/Utils/Header/index";
 import PodcastCard from "../components/Podcasts/PodcastCard";
 import InputComponent from "../components/Utils/Input/FileInput";
@@ -20,49 +23,54 @@ export default function PodcastsPage() {
   const [podcasts, setPodcasts] = useState([]);
   const [search, setSearch] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("");
-  const [sortBy, setSortBy] = useState(""); // State to track sorting order
-  const [isLoading, setIsLoading] = useState(true); // Loading state
+  const [sortBy, setSortBy] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchPodcasts = async () => {
       try {
-        setIsLoading(true); // Set loading state to true on fetch start
+        setIsLoading(true);
         const response = await fetch("https://podcast-api.netlify.app");
         const data = await response.json();
         const podcastsData = data.map((item) => ({
           id: item.id,
           title: item.title,
           displayImage: item.image,
-          genres: item.genres.map(genreId => genreMap[genreId]), // Map genre IDs to titles
-          lastUpdated: item.last_updated, // Assuming this is how last updated is received
-          seasons: item.seasons, // Number of seasons
-          // episodes: item.episodes, // Number of episodes
+          genres: item.genres.map(genreId => genreMap[genreId]),
+          lastUpdated: item.last_updated,
+          seasons: item.seasons,
         }));
-        // Sort podcasts alphabetically by title initially
         podcastsData.sort((a, b) => a.title.localeCompare(b.title));
         setPodcasts(podcastsData);
-        setIsLoading(false); // Set loading state to false on fetch completion
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching podcasts:", error);
-        setIsLoading(false); // Set loading state to false on fetch error
+        setIsLoading(false);
       }
     };
 
     fetchPodcasts();
-  }, []); // Dependency array ensures useEffect runs once
+  }, []);
 
-  // Handle sorting based on title
   useEffect(() => {
     if (sortBy === "A-Z") {
-      // Sort alphabetically A-Z
       setPodcasts([...podcasts].sort((a, b) => a.title.localeCompare(b.title)));
     } else if (sortBy === "Z-A") {
-      // Sort alphabetically Z-A
       setPodcasts([...podcasts].sort((a, b) => b.title.localeCompare(a.title)));
     }
-  }, [sortBy, podcasts]); // Include podcasts in the dependency array
+  }, [sortBy, podcasts]);
 
-  // Filter podcasts based on search and selected genre
+  const handleAddToFavourites = (podcast) => {
+    const storedFavourites = JSON.parse(localStorage.getItem("favourites")) || [];
+    if (!storedFavourites.find((item) => item.id === podcast.id)) {
+      storedFavourites.push(podcast);
+      localStorage.setItem("favourites", JSON.stringify(storedFavourites));
+      toast.success(`${podcast.title} added to favourites!`);
+    } else {
+      toast.info(`${podcast.title} is already in favourites.`);
+    }
+  };
+
   let filteredPodcasts = podcasts.filter(
     (item) =>
       item.title.trim().toLowerCase().includes(search.trim().toLowerCase()) &&
@@ -96,7 +104,6 @@ export default function PodcastsPage() {
           </select>
         </div>
 
-        {/* Sort buttons */}
         <div style={{ marginTop: "1rem" }}>
           <button onClick={() => setSortBy("A-Z")}>Sort A-Z</button>
           <button onClick={() => setSortBy("Z-A")}>Sort Z-A</button>
@@ -110,6 +117,7 @@ export default function PodcastsPage() {
               <PodcastCard
                 key={item.id}
                 item={item}
+                onAddToFavourites={handleAddToFavourites}
               />
             ))}
           </div>
