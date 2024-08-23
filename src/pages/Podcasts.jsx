@@ -36,7 +36,7 @@ export default function PodcastsPage() {
           genres: item.genres.map(genreId => genreMap[genreId]), // Map genre IDs to titles
           lastUpdated: item.last_updated, // Assuming this is how last updated is received
           seasons: item.seasons, // Number of seasons
-          episodes: item.episodes, // Number of episodes
+          // episodes: item.episodes, // Number of episodes
         }));
         // Sort podcasts alphabetically by title initially
         podcastsData.sort((a, b) => a.title.localeCompare(b.title));

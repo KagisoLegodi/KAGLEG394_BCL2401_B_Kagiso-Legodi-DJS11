@@ -36,7 +36,7 @@
 }
 
 .genre {
-  background-color: #eee;
+  background-color: gray;
   border-radius: 3px;
   padding: 2px 5px;
   font-size: 0.8em;
@@ -49,5 +49,5 @@
 .additional-info p {
   margin: 0;
   font-size: 0.9em;
-  color: #555;
+  color: ;gray
 }

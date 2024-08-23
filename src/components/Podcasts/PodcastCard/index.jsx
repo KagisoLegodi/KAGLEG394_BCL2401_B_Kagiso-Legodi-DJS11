@@ -7,7 +7,7 @@ const PodcastCard = ({ item, showFavoritesButton }) => {
     return ;
   }
 
-  const { id, title, displayImage, genres, episodes, seasons, lastUpdated } = item;
+  const { id, title, displayImage, genres, seasons } = item;
 
   const handleFavoriteEpisode = () => {
     const favorites = JSON.parse(localStorage.getItem("favoriteEpisodes")) || [];
@@ -48,11 +48,11 @@ const PodcastCard = ({ item, showFavoritesButton }) => {
         )}
       </div>
       <div className="additional-info">
-        <p>Episodes: {episodes}</p>
+        {/* <p>Episodes: {episodes}</p> */}
         {showFavoritesButton && <button onClick={handleFavoriteEpisode}>Favorite Episode</button>}
         <p>Seasons: {seasons}</p>
         {showFavoritesButton && <button onClick={handleFavoriteSeason}>Favorite Season</button>}
-        <p>Last Updated: {lastUpdated}</p>
+        {/* <p>Last Updated: {lastUpdated}</p> */}
       </div>
     </div>
   );
