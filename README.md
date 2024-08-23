@@ -1,6 +1,3 @@
-Here's a structured `README.md` file for your podcast app in Markdown format:
-
-```markdown
 # Podcast App
 
 Welcome to the Podcast App! This application allows users to explore, search, and manage podcasts. Users can view podcast details, seasons, and episodes, and add their favorite podcasts, seasons, and genres to their favorites list.
