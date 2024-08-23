@@ -1,15 +1,23 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { AiFillMobile, AiFillHeart, AiOutlineDelete } from "react-icons/ai";
+import { AiFillHeart, AiOutlineDelete } from "react-icons/ai";
+
+const SORT_OPTIONS = {
+  AZ: "A-Z",
+  ZA: "Z-A",
+  MOST_RECENT: "Most Recent",
+  OLDEST: "Oldest",
+};
 
 const FavouritesPage = () => {
   const [likedEpisodes, setLikedEpisodes] = useState([]);
-  const [sortOrder, setSortOrder] = useState("A-Z");
+  const [sortOrder, setSortOrder] = useState(SORT_OPTIONS.AZ);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedGenre, setSelectedGenre] = useState("All");
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchLikedEpisodes = () => {
+    const fetchLikedEpisodes = async () => {
       setIsLoading(true);
       try {
         const storedLikedEpisodes =
@@ -24,6 +32,21 @@ const FavouritesPage = () => {
     };
 
     fetchLikedEpisodes();
+  }, []);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (document.querySelector('audio[data-playing="true"]')) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
   }, []);
 
   const handleUnlikeEpisode = (episodeId) => {
@@ -54,6 +77,8 @@ const FavouritesPage = () => {
     ) {
       setLikedEpisodes([]);
       localStorage.removeItem("likedEpisodes");
+      localStorage.removeItem("listenedEpisodes");
+      // Reset any other relevant storage items
     }
   };
 
@@ -63,15 +88,15 @@ const FavouritesPage = () => {
 
   const sortEpisodes = (episodes, order) => {
     switch (order) {
-      case "A-Z":
+      case SORT_OPTIONS.AZ:
         return [...episodes].sort((a, b) => a.title.localeCompare(b.title));
-      case "Z-A":
+      case SORT_OPTIONS.ZA:
         return [...episodes].sort((a, b) => b.title.localeCompare(a.title));
-      case "Most Recent":
+      case SORT_OPTIONS.MOST_RECENT:
         return [...episodes].sort(
           (a, b) => new Date(b.updated) - new Date(a.updated)
         );
-      case "Oldest":
+      case SORT_OPTIONS.OLDEST:
         return [...episodes].sort(
           (a, b) => new Date(a.updated) - new Date(b.updated)
         );
@@ -92,12 +117,29 @@ const FavouritesPage = () => {
     return grouped;
   };
 
-  const sortedEpisodes = sortEpisodes(likedEpisodes, sortOrder);
+  const handleGenreChange = (genre) => {
+    setSelectedGenre(genre);
+  };
+
+  const filteredEpisodes =
+    selectedGenre === "All"
+      ? likedEpisodes
+      : likedEpisodes.filter((episode) => episode.genre === selectedGenre);
+
+  const sortedEpisodes = sortEpisodes(filteredEpisodes, sortOrder);
   const groupedEpisodes = groupEpisodesByShowAndSeason(sortedEpisodes);
 
+  const handleAudioPlay = (event) => {
+    event.target.dataset.playing = "true";
+  };
+
+  const handleAudioPause = (event) => {
+    event.target.dataset.playing = "false";
+  };
+
   return (
-    <div className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
-      <div className="flex justify-between items-center mb-6">
+    <main className="container mx-auto py-8 px-4 sm:px-6 lg:px-8">
+      <header className="flex justify-between items-center mb-6">
         <div className="flex items-center">
           <button
             onClick={() => navigate("/podcasts")}
@@ -106,7 +148,6 @@ const FavouritesPage = () => {
             Back to Podcasts
           </button>
           <h1 className="text-4xl font-bold text-gray-900 flex items-center">
-            <AiFillMobile className="mr-2 text-yellow-500" />
             Favourites
           </h1>
         </div>
@@ -116,7 +157,7 @@ const FavouritesPage = () => {
               onClick={handleRemoveAllLikedEpisodes}
               className="px-4 py-2 rounded-full border bg-red-600 text-white flex items-center hover:bg-red-700 transition-colors"
             >
-              <AiOutlineDelete className="mr-2" />
+              <AiOutlineDelete className="mr-2" aria-label="Remove All" />
               Remove All
             </button>
             <button
@@ -127,49 +168,33 @@ const FavouritesPage = () => {
             </button>
           </div>
         )}
-      </div>
+      </header>
 
       <div className="mb-4 flex space-x-2">
-        <button
-          onClick={() => handleSortChange("A-Z")}
-          className={`px-4 py-2 rounded-full border ${
-            sortOrder === "A-Z"
-              ? "bg-blue-900 text-white"
-              : "bg-white text-blue-900"
-          }`}
+        {Object.values(SORT_OPTIONS).map((option) => (
+          <button
+            key={option}
+            onClick={() => handleSortChange(option)}
+            className={`px-4 py-2 rounded-full border ${
+              sortOrder === option
+                ? "bg-blue-900 text-white"
+                : "bg-white text-blue-900"
+            }`}
+          >
+            {option}
+          </button>
+        ))}
+      </div>
+
+      <div className="mb-4">
+        <select
+          value={selectedGenre}
+          onChange={(e) => handleGenreChange(e.target.value)}
+          className="px-4 py-2 rounded-full border"
         >
-          A-Z
-        </button>
-        <button
-          onClick={() => handleSortChange("Z-A")}
-          className={`px-4 py-2 rounded-full border ${
-            sortOrder === "Z-A"
-              ? "bg-blue-900 text-white"
-              : "bg-white text-blue-900"
-          }`}
-        >
-          Z-A
-        </button>
-        <button
-          onClick={() => handleSortChange("Most Recent")}
-          className={`px-4 py-2 rounded-full border ${
-            sortOrder === "Most Recent"
-              ? "bg-blue-900 text-white"
-              : "bg-white text-blue-900"
-          }`}
-        >
-          Most Recent
-        </button>
-        <button
-          onClick={() => handleSortChange("Oldest")}
-          className={`px-4 py-2 rounded-full border ${
-            sortOrder === "Oldest"
-              ? "bg-blue-900 text-white"
-              : "bg-white text-blue-900"
-          }`}
-        >
-          Oldest
-        </button>
+          <option value="All">All Genres</option>
+          {/* Add other genre options here */}
+        </select>
       </div>
 
       {isLoading ? (
@@ -179,7 +204,7 @@ const FavouritesPage = () => {
       ) : Object.keys(groupedEpisodes).length === 0 ? (
         <p className="text-gray-700">No liked episodes found.</p>
       ) : (
-        <div>
+        <section>
           {Object.keys(groupedEpisodes).map((key) => (
             <div key={key} className="mb-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-4">{key}</h2>
@@ -209,22 +234,27 @@ const FavouritesPage = () => {
                         controls
                         src={episode.file}
                         className="w-full"
+                        onPlay={handleAudioPlay}
+                        onPause={handleAudioPause}
                       ></audio>
                     </div>
                     <button
                       onClick={() => handleUnlikeEpisode(episode.id)}
                       className="ml-4 p-2"
                     >
-                      <AiFillHeart className="text-red-600 text-2xl" />
+                      <AiFillHeart
+                        className="text-red-600 text-2xl"
+                        aria-label="Unlike Episode"
+                      />
                     </button>
                   </li>
                 ))}
               </ul>
             </div>
           ))}
-        </div>
+        </section>
       )}
-    </div>
+    </main>
   );
 };
 
