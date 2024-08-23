@@ -7,7 +7,7 @@ function EpisodeDetails({
   title,
   description,
   audioFile,
-  seasonImage,
+  episodeImage, // Changed from seasonImage
   episodeId,
   podcastId,
 }) {
@@ -42,25 +42,28 @@ function EpisodeDetails({
   };
 
   return (
-    <div className="episode-details">
+    <div className="flex flex-col p-4 bg-gray-800 text-white rounded-lg shadow-lg">
       <img
-        src={seasonImage}
-        alt={`Season image for ${title}`}
-        className="season-image"
+        src={episodeImage}
+        alt={`Episode image for ${title}`}
+        className="w-full h-48 object-cover rounded-lg mb-4"
       />
-      <h2>
+      <h2 className="text-2xl font-semibold mb-2">
         Episode {index}: {title}
       </h2>
-      <p>{description}</p>
-      <audio controls className="custom-audio-player">
+      <p className="text-sm mb-4">{description}</p>
+      <audio controls className="w-full bg-gray-700 rounded-lg">
         <source src={audioFile} type="audio/mp4" />
         Your browser does not support the audio element.
       </audio>
-      <button onClick={handleLikeToggle} className="like-button">
+      <button
+        onClick={handleLikeToggle}
+        className="mt-4 p-2 rounded-full hover:bg-gray-700 transition-colors"
+      >
         {isLiked ? (
           <AiFillHeart className="text-red-600 text-2xl" />
         ) : (
-          <AiOutlineHeart className="text-gray-600 text-2xl" />
+          <AiOutlineHeart className="text-gray-400 text-2xl" />
         )}
       </button>
     </div>
@@ -72,9 +75,9 @@ EpisodeDetails.propTypes = {
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   audioFile: PropTypes.string.isRequired,
-  seasonImage: PropTypes.string.isRequired,
+  episodeImage: PropTypes.string.isRequired, // Updated prop type
   episodeId: PropTypes.string.isRequired,
-  podcastId: PropTypes.string.isRequired, // Adding this prop to track podcast ID for favorites
+  podcastId: PropTypes.string.isRequired,
 };
 
 export default EpisodeDetails;

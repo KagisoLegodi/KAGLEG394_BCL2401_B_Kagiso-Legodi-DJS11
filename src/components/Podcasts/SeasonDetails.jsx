@@ -1,13 +1,15 @@
 import PropTypes from "prop-types";
 import EpisodeDetails from "./EpisodeDetails";
-import "./SeasonDetails.css";
 
 export default function SeasonDetails({ season, podcastId }) {
   return (
-    <div className="season-details">
+    <div className="p-4 bg-dark-background text-light-text rounded-lg shadow-lg">
       {season.episodes.length > 0 ? (
         season.episodes.map((episode, episodeIndex) => (
-          <div className="episode-card" key={episode.id}>
+          <div
+            key={episode.id}
+            className="bg-dark-background text-light-text rounded-lg shadow-md mb-4 p-4 transition-transform transform hover:scale-105"
+          >
             <EpisodeDetails
               index={episodeIndex + 1}
               title={episode.title}
@@ -16,14 +18,14 @@ export default function SeasonDetails({ season, podcastId }) {
                 episode.audioFile ||
                 "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
               }
-              seasonImage={season.displayImage}
+              episodeImage={episode.image} // Pass episode image
               episodeId={episode.id} // Pass episode ID
               podcastId={podcastId} // Pass podcast ID
             />
           </div>
         ))
       ) : (
-        <p>No Episodes</p>
+        <p className="text-lg text-gray-500">No Episodes</p>
       )}
     </div>
   );
@@ -33,15 +35,16 @@ SeasonDetails.propTypes = {
   season: PropTypes.shape({
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
-    displayImage: PropTypes.string.isRequired,
+    displayImage: PropTypes.string, // This is no longer used
     episodes: PropTypes.arrayOf(
       PropTypes.shape({
-        id: PropTypes.string.isRequired, // Ensure id is included
+        id: PropTypes.string.isRequired,
         title: PropTypes.string.isRequired,
         description: PropTypes.string.isRequired,
         audioFile: PropTypes.string,
+        image: PropTypes.string.isRequired, // Ensure image is included
       })
     ).isRequired,
   }).isRequired,
-  podcastId: PropTypes.string.isRequired, // Pass podcast ID as a prop
+  podcastId: PropTypes.string.isRequired,
 };
