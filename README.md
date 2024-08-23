@@ -1,1 +1,1 @@
-netlify Link : <https://goat-cast.netlify.app/>
+[LIVE DEMO]https://goat-cast.vercel.app/
